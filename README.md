@@ -19,6 +19,7 @@ npm run typecheck
 npm run test
 npm run build
 npm audit --audit-level=high
+npx playwright install chromium
 npm run test:e2e
 npm run preview
 ```
