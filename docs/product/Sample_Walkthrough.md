@@ -1,6 +1,6 @@
 # Reproducible sample walkthrough
 
-Run `npm ci`, `npm run build`, then `npm run preview`. Open `http://127.0.0.1:4187/Program-Atlas/`. If stored data exists, review Reset sample and confirm it before replaying the original example. All people, costs and program data are fictional.
+Use [the interactive demo](https://mvahedi2020.github.io/Program-Atlas/), or run `npm ci`, `npm run build`, then `npm run preview` and open `http://127.0.0.1:4187/Program-Atlas/`. If stored data exists, review Reset sample and confirm it before replaying the original example. All people, costs and program data are fictional.
 
 ## Primary journey
 

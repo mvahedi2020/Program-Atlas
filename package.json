@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run src",
     "test:e2e": "playwright test",
-    "check:runtime": "node scripts/check-runtime.mjs"
+    "check:runtime": "node scripts/check-runtime.mjs && node scripts/check-tracked-files.mjs"
   },
   "dependencies": {
     "react": "19.2.8",

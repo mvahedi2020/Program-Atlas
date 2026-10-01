@@ -45,3 +45,7 @@ An initial keyboard replay found that native dialog Shift+Tab could leave the in
 ## Proposed human evaluation
 
 Use a cause-identification task, a recovery-choice task and an escalation-completeness rubric. Proposed measures: correct identification of upstream impact; recognition of remaining risk; owner/decision/evidence/due completeness. Keep those denominators distinct from completion speed. Software tests cannot establish these human measures; no participants have been recruited or observed.
+
+## Independent release review
+
+The primary reviewer checked domain calculations, cause explanations, immutable records and persistence rules, then replayed cancellation, partner delay, recovery comparison, scope confirmation, decision capture and return in a separate production browser. Observed dates were October 20 → 23 → 21, with recovery alternatives October 21/22/21. The 320px page defaulted to the complete List view with no body overflow and no reported browser errors. Private-source and local-link preflight passed across 40 tracked files and seven relative document links before the final release preparation. The tracked-runtime/environment guard is also enforced during builds. Public deployment checks follow separately.

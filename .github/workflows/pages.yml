@@ -1,4 +1,4 @@
-name: Verify and deploy Program Atlas
+name: Verify and publish demo
 on:
   push:
     branches: [main]
