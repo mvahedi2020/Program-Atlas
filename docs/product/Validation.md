@@ -1,6 +1,6 @@
 # Validation evidence
 
-Local checks dated September 30, 2026 (America/Los_Angeles). The final production browser replay used `http://127.0.0.1:4187/Program-Atlas/`. Generated build/test output and screenshots are ignored by Git. Publication and live parity remain pending independent primary release verification.
+Local checks dated September 30, 2026 (America/Los_Angeles). The final production browser replay used `http://127.0.0.1:4187/Program-Atlas/`. Generated build/test output and screenshots are ignored by Git. Independent public release verification subsequently passed on October 1, 2026, as recorded below.
 
 ## Software evidence
 
@@ -38,7 +38,7 @@ An initial keyboard replay found that native dialog Shift+Tab could leave the in
 
 ## Evidence still open
 
-- Public repository creation, pushed/local head agreement, GitHub Actions/Pages success, live-build parity and profile route verification belong to the primary release review.
+- The software/publication evidence is recorded below; the public [profile](https://github.com/mvahedi2020) provides the case study, PRD, walkthrough and demo route.
 - Mo’s comprehension and product tradeoff discussion are not observed.
 - No human research, actual partner review, customer outcomes, forecast accuracy or commercial results are claimed.
 
@@ -48,4 +48,8 @@ Use a cause-identification task, a recovery-choice task and an escalation-comple
 
 ## Independent release review
 
-The primary reviewer checked domain calculations, cause explanations, immutable records and persistence rules, then replayed cancellation, partner delay, recovery comparison, scope confirmation, decision capture and return in a separate production browser. Observed dates were October 20 → 23 → 21, with recovery alternatives October 21/22/21. The 320px page defaulted to the complete List view with no body overflow and no reported browser errors. Private-source and local-link preflight passed across 40 tracked files and seven relative document links before the final release preparation. The tracked-runtime/environment guard is also enforced during builds. Public deployment checks follow separately.
+The primary reviewer checked domain calculations, cause explanations, immutable records and persistence rules, then replayed cancellation, partner delay, recovery comparison, scope confirmation, decision capture and return in a separate production browser. Observed dates were October 20 → 23 → 21, with recovery alternatives October 21/22/21. The 320px page defaulted to the complete List view with no body overflow and no reported browser errors. Private-source and local-link preflight passed across 40 tracked files and seven relative document links before the final release preparation. The tracked-runtime/environment guard is also enforced during builds. Public deployment checks subsequently passed, as recorded below.
+
+## Public release verification
+
+The initial public release at `22a91f1de1750a5b11a77b31b4b8ab325269be0c` passed [GitHub verification and Pages deployment](https://github.com/mvahedi2020/Program-Atlas/actions/runs/36827844912). Local HEAD matched GitHub main, the worktree was clean, and all 11 deployed files matched the local production build and GitHub deployment artifact byte for byte. CSP and no-referrer metadata were present. The live page loaded its original October 20 readiness and primary controls with no reported page errors. These are point-in-time observations from 2026-10-01, not uptime, human research or commercial-outcome claims. [Try Program Atlas](https://mvahedi2020.github.io/Program-Atlas/).

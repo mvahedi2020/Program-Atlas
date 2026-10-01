@@ -18,6 +18,6 @@ Local integrity is part of that program decision. A preview cannot be used again
 
 ## Evidence and limits
 
-Software verification is recorded in Validation.md, with independent hand-calculated dates and invalid graph/state cases separated from browser journeys. These checks establish behavior in the bounded prototype. They do not establish user comprehension, acceptance of the recovery, actual partner capacity, forecast accuracy, commercial impact or Mo’s personal review. Public publication remains subject to primary release verification.
+Software verification is recorded in Validation.md, with independent hand-calculated dates and invalid graph/state cases separated from browser journeys. These checks establish behavior in the bounded prototype. They do not establish user comprehension, acceptance of the recovery, actual partner capacity, forecast accuracy, commercial impact or Mo’s personal review. Initial public source/deployment and live-file parity passed independent release verification; the exact evidence is recorded in [Validation](Validation.md).
 
 Proposed evaluation: present the original and delayed scenarios without prompting the cause. Ask a program lead to identify the upstream impact, explain criticality versus slack, select a recovery and name the unresolved risk. Score cause identification and escalation completeness separately from completion time. No such research has been performed.

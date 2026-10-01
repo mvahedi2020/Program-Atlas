@@ -33,7 +33,7 @@ Invalid relationship: leave current graph untouched, explain missing/circular/re
 |---|---|---|
 | S009 | Product_Brief.md: lead, decision, alternative, non-goals | Local product framing complete; Mo discussion not observed |
 | S010 | Sample_Contract.md; original seed/model and state rules | Complete local contract; choices visibly provisional |
-| S011 | React/TypeScript/Vite foundation, guarded Node 24, Pages base, CSP/referrer, pinned CI | Local foundation verified; public repository/demo pending primary review |
+| S011 | React/TypeScript/Vite foundation, guarded Node 24, Pages base, CSP/referrer, pinned CI | Local foundation and initial public repository/demo verification passed |
 | S012 | DependencyMap + Inspector: four streams, eight tasks, ownership/handoff/outcome | Implemented |
 | S013 | validateTasks and dependencyProposal with graph/input regression cases | Implemented |
 | S014 | schedule/calendar and independent weekday/parallel/slack calculations | Implemented |
@@ -42,7 +42,7 @@ Invalid relationship: leave current graph untouched, explain missing/circular/re
 | S017 | ExecutiveBrief and detached report export | Implemented |
 | S018 | Revision/content/epoch checks, storage safeguards, Reset/Undo | Implemented |
 | S019 | Production browser primary/recovery, mobile/keyboard and software checks; case study/evaluation plan | Local evidence recorded in Validation.md; human research unperformed |
-| S020 | Local release gates and reviewable repository/documents | Publication, live parity, profile routing and Mo comprehension review pending primary verification |
+| S020 | Local release gates and reviewable repository/documents | Public source/demo, live parity and profile routing verified; Mo comprehension remains unobserved |
 
 ## Exclusions and quality boundary
 

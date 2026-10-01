@@ -19,4 +19,4 @@ The scope-reduction recommendation is provisional. It is defensible only if the 
 
 Source review found and corrected three teaching risks: hardcoded date impact after custom edits, critical-edge highlighting based only on critical endpoints, and arrows between unrelated upstream prerequisites. Consequences now derive from actual schedules; a critical edge also requires tight timing; sets of prerequisites and zero-slack tasks are comma-separated.
 
-Open evidence: no owner has reviewed the fictional handoffs; no human user has been observed; no customer/commercial impact is known; Mo’s comprehension/rejected-alternative discussion is pending; public deployment and live parity need independent release verification.
+Open evidence: no owner has reviewed the fictional handoffs; no human user has been observed; no customer/commercial impact is known; Mo’s comprehension/rejected-alternative discussion is pending; public deployment and live parity have been independently verified as recorded in [Validation](Validation.md).
