@@ -27,3 +27,4 @@ describe('independent hand-calculated calendar and path cases',()=>{
  })
  it('traces upstream causes for executive exceptions',()=>{expect(causes(freshPlan().tasks,'E2')).toEqual(['P1','P2','T1','T2','A1','A2','E1'])})
 })
+it('critical edges require tight timing, not just two zero-slack nodes',async()=>{const {criticalEdge}=await import('./schedule');const p=freshPlan();p.tasks[2].predecessors=['P1'];const a=schedule(p.tasks);expect(a.tasks.P1.critical).toBe(true);expect(a.tasks.T2.critical).toBe(true);expect(criticalEdge(a,'P1','T2')).toBe(false);expect(criticalEdge(a,'P1','T1')).toBe(true)})

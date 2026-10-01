@@ -18,6 +18,8 @@ function validDecision(value:unknown,revision:number):value is Decision {
   const task=snapshot.tasks[id]
   if(!record(task) || task.id!==id || !integer(task.start,0,159) || !integer(task.finish,task.start,159) || !integer(task.latestStart,task.start,159) || !integer(task.slack,0,159) || task.latestStart-task.start!==task.slack || task.critical!==(task.slack===0) || task.startDate!==workDate(task.start) || task.finishDate!==workDate(task.finish)) return false
  }
+ const slots=ids.map(id=>(snapshot.tasks as Record<string,Record<string,unknown>>)[id])
+ if(Math.max(...slots.map(t=>t.finish as number))+1!==snapshot.length || new Set(snapshot.critical).size!==snapshot.critical.length || ids.some(id=>(snapshot.critical as unknown[]).includes(id)!==(snapshot.tasks as Record<string,Record<string,unknown>>)[id].critical)) return false
  return value.due>='2026-10-05' && value.due<=snapshot.finishDate
 }
 export function parsePlan(raw:string):Plan|null {

@@ -56,3 +56,5 @@ export function causes(tasks:Task[],id:TaskId):TaskId[] {
  function visit(current:TaskId) {for(const p of tasks.find(t=>t.id===current)!.predecessors) {if(!seen.has(p)) {seen.add(p);visit(p)}}}
  visit(id);return ids.filter(t=>seen.has(t))
 }
+
+export function criticalEdge(value:Schedule,predecessor:TaskId,successor:TaskId):boolean {return value.tasks[predecessor].critical && value.tasks[successor].critical && value.tasks[predecessor].finish+1===value.tasks[successor].start}
