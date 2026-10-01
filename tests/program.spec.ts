@@ -1,0 +1,53 @@
+import { test, expect, type Page } from '@playwright/test'
+const key='program-atlas:v1'
+async function stored(page:Page){return page.evaluate(k=>window.localStorage.getItem(k),key)}
+async function delay(page:Page){await page.getByRole('button',{name:'Preview partner delay'}).click();await page.getByRole('button',{name:'Confirm proposal',exact:true}).click();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 23')}
+test('primary: delay, compare, cancel, confirm scope, record escalation, export, refresh',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())})
+ await page.goto('');await expect(page.getByTestId('readiness-date')).toHaveText('Oct 20');await expect(page.locator('body')).toContainText('no prediction or notification')
+ await page.getByRole('button',{name:'Preview partner delay'}).click();await expect(page.getByRole('dialog')).toContainText('Oct 23');expect(await stored(page)).toBeNull();await page.getByRole('button',{name:'Cancel preview'}).click();expect(await stored(page)).toBeNull()
+ await delay(page);const delayed=await stored(page)
+ await page.getByRole('button',{name:'Preview contingency'}).click();await expect(page.getByRole('dialog')).toContainText('$4,800');await expect(page.getByRole('dialog')).toContainText('Oct 21');await page.keyboard.press('Escape');expect(await stored(page)).toBe(delayed)
+ await page.getByRole('button',{name:'Preview resequencing'}).click();await expect(page.getByRole('dialog')).toContainText('Oct 22');await expect(page.getByRole('dialog')).toContainText('Real partner contract');await page.getByRole('button',{name:'Cancel preview'}).click()
+ await page.getByRole('button',{name:'Preview scope reduction'}).click();await expect(page.getByRole('dialog')).toContainText('edge cases');await page.getByRole('button',{name:'Confirm proposal',exact:true}).click();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 21')
+ await page.getByLabel('Supporting evidence').fill('P1 grows from 3 to 7 days. A2 evidence narrows to 1 day; readiness moves from Oct 20 to Oct 21. Edge cases remain untested.')
+ await page.getByRole('button',{name:'Review escalation record'}).click();await expect(page.getByRole('dialog')).toContainText('Anika Lark');await expect(page.getByRole('dialog')).toContainText('2026-10-09');await page.getByRole('button',{name:'Confirm decision record'}).click();await expect(page.getByText('Recorded decision snapshots')).toBeVisible();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 21')
+ const saved=await stored(page);const download=page.waitForEvent('download');await page.getByRole('button',{name:'Export local report'}).click();expect((await download).suggestedFilename()).toBe('program-atlas-revision-3.md');expect(await stored(page)).toBe(saved)
+ await page.reload();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 21');await expect(page.getByText('Recorded decision snapshots')).toBeVisible();await expect(page.getByRole('button',{name:'Undo last confirmation'})).toBeDisabled();expect(errors).toEqual([])
+})
+test('meaningful error/recovery: missing reference and cycle cannot alter plan, valid edit and Undo work',async({page})=>{
+ await page.goto('');await page.getByLabel('Predecessor IDs').fill('UNKNOWN');await page.getByRole('button',{name:'Preview handoff change'}).click();await expect(page.getByRole('alert')).toContainText('does not exist');expect(await stored(page)).toBeNull()
+ await page.getByLabel('Predecessor IDs').fill('P2');await page.getByRole('button',{name:'Preview handoff change'}).click();await expect(page.getByRole('alert')).toContainText('cycle');expect(await stored(page)).toBeNull()
+ await page.getByLabel('Predecessor IDs').fill('');await page.getByLabel('Duration / working days').fill('5');await page.getByRole('button',{name:'Preview handoff change'}).click();await page.getByRole('button',{name:'Confirm proposal',exact:true}).click();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 21');await page.getByRole('button',{name:'Undo last confirmation'}).click();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 20');await expect(page.getByRole('button',{name:'Undo last confirmation'})).toBeDisabled()
+})
+test('reset cancellation preserves scenario and confirmed reset can be undone',async({page})=>{
+ await page.goto('');await delay(page);const before=await stored(page);await page.getByRole('button',{name:'Reset sample',exact:true}).click();await page.getByRole('button',{name:'Cancel preview'}).click();expect(await stored(page)).toBe(before)
+ await page.getByRole('button',{name:'Reset sample',exact:true}).click();await page.getByRole('button',{name:'Confirm reset'}).click();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 20');await page.getByRole('button',{name:'Undo last confirmation'}).click();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 23')
+})
+test('invalid storage is preserved until reviewed reset',async({page})=>{
+ await page.addInitScript(({key})=>window.localStorage.setItem(key,'{broken'),{key});await page.goto('');await expect(page.getByText('Saved data needs recovery')).toBeVisible();expect(await stored(page)).toBe('{broken');await expect(page.getByRole('button',{name:'Preview partner delay'})).toBeDisabled();await page.getByRole('button',{name:'Reset sample',exact:true}).click();await page.getByRole('button',{name:'Confirm reset'}).click();expect(JSON.parse((await stored(page))!).schema).toBe(1);await expect(page.getByText('Browser-local save')).toBeVisible()
+})
+test('storage getter throwing leaves usable announced in-memory scenario',async({page})=>{
+ await page.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new Error('blocked')}}));await page.goto('');await expect(page.getByText('Memory only', {exact:true})).toBeVisible();await delay(page);await expect(page.getByRole('status')).toContainText('refresh will lose this scenario');await page.reload();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 20')
+})
+test('failed persistence after load falls back to memory without claiming save',async({page})=>{
+ await page.goto('');await page.evaluate(()=>{Storage.prototype.setItem=()=>{throw new Error('quota')}});await delay(page);await expect(page.getByText('Memory only',{exact:true})).toBeVisible();expect(await stored(page)).toBeNull();await expect(page.getByRole('status')).toContainText('Confirmed in this tab only')
+})
+test('same-revision cross-tab write invalidates open preview',async({page,context})=>{
+ await page.goto('');await page.getByRole('button',{name:'Preview partner delay'}).click();const second=await context.newPage();await second.goto('');await second.getByLabel('Duration / working days').fill('5');await second.getByRole('button',{name:'Preview handoff change'}).click();await second.getByRole('button',{name:'Confirm proposal',exact:true}).click()
+ // Change the second tab persisted revision to the original preview revision, while preserving altered tasks.
+ await second.evaluate(k=>{const p=JSON.parse(window.localStorage.getItem(k)!);p.revision=0;window.localStorage.setItem(k,JSON.stringify(p))},key)
+ await expect(page.getByRole('dialog')).toContainText('preview is stale');await expect(page.getByRole('button',{name:'Confirm proposal',exact:true})).toBeDisabled();await page.getByRole('button',{name:'Cancel preview'}).click();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 21');expect(JSON.parse((await stored(page))!).tasks[0].duration).toBe(5)
+})
+test('missed storage event is caught by save conflict check',async({page})=>{
+ await page.goto('');await page.getByRole('button',{name:'Preview partner delay'}).click();await page.evaluate(k=>window.localStorage.setItem(k,'{other invalid data'),key);await page.getByRole('button',{name:'Confirm proposal',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('action was not applied');expect(await stored(page)).toBe('{other invalid data');await expect(page.getByRole('button',{name:'Confirm proposal',exact:true})).toBeDisabled()
+})
+test('equivalent list exposes all eight owners, handoffs and outcomes',async({page})=>{
+ await page.goto('');await page.getByRole('button',{name:'List',exact:true}).click();await expect(page.locator('.list-node')).toHaveCount(8);await expect(page.locator('.dependency-list')).toContainText('Mira Vale');await expect(page.locator('.dependency-list')).toContainText('Owen Reed');await expect(page.locator('.dependency-list')).toContainText('Tessa North');await expect(page.locator('.dependency-list')).toContainText('Jules Finch');await expect(page.locator('.dependency-list')).toContainText('Support-ready handoff')
+})
+test('keyboard skip link, proposal focus trap, Escape and focus restoration',async({page})=>{
+ await page.goto('');await page.keyboard.press('Tab');await expect(page.getByRole('link',{name:'Skip to program workspace'})).toBeFocused();await page.keyboard.press('Enter');const trigger=page.getByRole('button',{name:'Preview partner delay'});await trigger.focus();await page.keyboard.press('Enter');await expect(page.getByRole('dialog')).toBeVisible();await expect(page.getByRole('button',{name:'Cancel preview'})).toBeFocused();await page.keyboard.press('Shift+Tab');await expect(page.getByRole('button',{name:'Confirm proposal',exact:true})).toBeFocused();await page.keyboard.press('Escape');await expect(trigger).toBeFocused();expect(await stored(page)).toBeNull()
+})
+test('mobile layout remains within viewport, list works and recovery dialog is reachable',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('');await expect(page.getByRole('button',{name:'List',exact:true})).toHaveAttribute('aria-pressed','true');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await delay(page);await page.getByRole('button',{name:'Preview scope reduction'}).click();await expect(page.getByRole('button',{name:'Confirm proposal',exact:true})).toBeVisible();await page.getByRole('button',{name:'Confirm proposal',exact:true}).click();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 21');await page.screenshot({path:'evidence/program-atlas-mobile.png',fullPage:true})
+})

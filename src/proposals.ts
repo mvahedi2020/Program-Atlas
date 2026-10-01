@@ -11,6 +11,7 @@ export const recoveryDetails = {
 export function fingerprint(plan:Plan):string {return JSON.stringify(plan)}
 function make(plan:Plan,candidate:Plan,kind:ProposalKind,title:string,description:string,cost:string,residual:string):Proposal {
  const issue=validateTasks(candidate.tasks);if(issue) throw new Error(issue)
+ if(candidate.risks.length>100) throw new Error('This sample supports 100 change records. Export and reset before adding another change.')
  candidate.revision=plan.revision+1
  return {title,expected:fingerprint(plan),candidate,kind,description,cost,residual,changed:changes(plan.tasks,candidate.tasks)}
 }

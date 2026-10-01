@@ -8,7 +8,7 @@ export type StorageAccess=()=>Pick<Storage,'getItem'|'setItem'>
 const access:StorageAccess=()=>window.localStorage
 function record(value:unknown):value is Record<string,unknown> {return typeof value==='object' && value!==null && !Array.isArray(value)}
 function text(value:unknown):value is string {return typeof value==='string' && value.length>=1 && value.length<=1200}
-function integer(value:unknown,min=0,max=10000):value is number {return typeof value==='number' && Number.isInteger(value) && value>=min && value<=max}
+function integer(value:unknown,min=0,max=Number.MAX_SAFE_INTEGER):value is number {return typeof value==='number' && Number.isInteger(value) && value>=min && value<=max}
 function validRisk(value:unknown):value is Risk {return record(value) && ['delay','scope','resequence','contingency','dependency'].includes(String(value.kind)) && text(value.reason) && text(value.cost) && text(value.residual)}
 function validDecision(value:unknown,revision:number):value is Decision {
  if(!record(value) || !text(value.owner) || !text(value.needed) || !text(value.evidence) || typeof value.due!=='string' || !validWorkDate(value.due) || !integer(value.revision) || value.revision>revision || !Array.isArray(value.riskSnapshot) || !value.riskSnapshot.every(validRisk)) return false
