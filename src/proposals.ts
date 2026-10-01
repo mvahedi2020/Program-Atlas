@@ -4,9 +4,9 @@ import { changes, schedule, validateTasks } from './schedule'
 export type ProposalKind = RiskKind | 'decision' | 'reset'
 export interface Proposal { title:string; expected:string; candidate:Plan; kind:ProposalKind; description:string; cost:string; residual:string; changed:TaskId[] }
 export const recoveryDetails = {
- scope:{title:'Reduce pilot scope',description:'Shorten Pilot evidence from 3 to 1 working day. Keep every acceptance prerequisite, run a narrow pilot and defer broad coverage.',cost:'Deferred broad acceptance coverage; 2 working days of evidence removed.',residual:'Limited evidence may miss edge cases. Pilot readiness still slips 1 working day after the original partner delay.'},
+ scope:{title:'Reduce pilot scope',description:'Shorten Pilot evidence from 3 to 1 working day. Keep every acceptance prerequisite, run a narrow pilot and defer broad coverage.',cost:'Deferred broad acceptance coverage; 2 working days of evidence removed.',residual:'Limited evidence may miss edge cases.'},
  resequence:{title:'Resequence with a rehearsal pack',description:'Substitute the real partner pack prerequisite for Connected routing with a locally reviewed rehearsal pack, and shorten that task to 2 days. Partner acceptance still gates Pilot evidence.',cost:'One extra rehearsal review and potential platform rework; no invented dollar estimate.',residual:'Real partner contract may differ. No broad pilot evidence can begin before Partner acceptance.'},
- contingency:{title:'Fund expedited partner review',description:'Spend a fictional $4,800 to shorten the delayed Partner sample pack by 2 working days. Keep scope and predecessor relationships.',cost:'$4,800 additional fictional cost; other durations remain fixed.',residual:'Compressed partner review may miss quality issues. Pilot readiness still slips 1 working day.'},
+ contingency:{title:'Fund expedited partner review',description:'Spend a fictional $4,800 to shorten the delayed Partner sample pack by 2 working days. Keep scope and predecessor relationships.',cost:'$4,800 additional fictional cost; other durations remain fixed.',residual:'Compressed partner review may miss quality issues.'},
 } as const
 export function fingerprint(plan:Plan):string {return JSON.stringify(plan)}
 function make(plan:Plan,candidate:Plan,kind:ProposalKind,title:string,description:string,cost:string,residual:string):Proposal {
@@ -18,7 +18,8 @@ function addRisk(candidate:Plan,kind:RiskKind,reason:string,cost:string,residual
 export function delayProposal(plan:Plan):Proposal {
  if(plan.risks.some(r=>r.kind==='delay') || plan.tasks.find(t=>t.id==='P1')!.duration!==3) throw new Error('The sample delay needs the original 3-day Partner sample pack. Reset the sample to replay it.')
  const c=structuredClone(plan); c.tasks.find(t=>t.id==='P1')!.duration=7
- const cost='Partner pack takes 4 additional working days; baseline completion moves 3 working days.'
+ const shift=schedule(c.tasks).length-schedule(plan.tasks).length
+ const cost=`Partner pack takes 4 additional working days; program completion moves ${shift} working day${shift===1?'':'s'} from the current plan.`
  const residual='Partner acceptance and downstream readiness remain dependent on the delayed pack.'
  addRisk(c,'delay','Partner schema review requires four extra working days.',cost,residual)
  return make(plan,c,'delay','Apply the partner delay','Increase Partner sample pack from 3 to 7 working days. Only its duration is edited; downstream dates are recomputed.',cost,residual)
@@ -30,8 +31,10 @@ export function recoveryProposal(plan:Plan,kind:'scope'|'resequence'|'contingenc
  if(kind==='scope') {const task=c.tasks.find(t=>t.id==='A2')!;if(task.duration!==3) throw new Error('Scope reduction requires the original 3-day evidence task. Reset for the declared example.');task.duration=1}
  if(kind==='resequence') {const task=c.tasks.find(t=>t.id==='T2')!;if(task.duration!==3 || task.handoffMode!=='standard') throw new Error('Resequencing requires the original Connected routing handoff. Reset for the declared example.');task.duration=2;task.predecessors=task.predecessors.filter(id=>id!=='P1');task.handoffMode='rehearsal'}
  if(kind==='contingency') {const task=c.tasks.find(t=>t.id==='P1')!;if(task.duration!==7) throw new Error('Expedited review requires the declared 7-day delayed partner pack. Reset for the declared example.');task.duration=5}
- addRisk(c,kind,detail.description,detail.cost,detail.residual)
- return make(plan,c,kind,detail.title,detail.description,detail.cost,detail.residual)
+ const gap=schedule(c.tasks).length-schedule(freshPlan().tasks).length
+ const residual=`${detail.residual} Resulting readiness is ${gap===0?'on the baseline date':`${Math.abs(gap)} working day${Math.abs(gap)===1?'':'s'} ${gap>0?'after':'before'} baseline`}.`
+ addRisk(c,kind,detail.description,detail.cost,residual)
+ return make(plan,c,kind,detail.title,detail.description,detail.cost,residual)
 }
 export function dependencyProposal(plan:Plan,id:TaskId,predecessors:string,duration:number):Proposal {
  const c=structuredClone(plan),task=c.tasks.find(t=>t.id===id)!

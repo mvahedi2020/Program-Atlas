@@ -25,3 +25,8 @@ it('escalation snapshot cannot change unrelated milestones or later saved eviden
 })
 it('invalid due point and blank decision do not mutate',()=>{const p=freshPlan();expect(()=>decisionProposal(p,{owner:'  ',needed:'review',evidence:'pack',due:'2026-10-11'})).toThrow();expect(()=>decisionProposal(p,{owner:'Mira',needed:'review',evidence:'pack',due:'2026-10-11'})).toThrow(/weekday/);expect(p.decisions).toHaveLength(0)})
 it('reset and one snapshot Undo produce new revisions',()=>{const p=confirm(freshPlan(),delayProposal(freshPlan())),r=confirm(p,resetProposal(p));expect(r.tasks).toEqual(freshPlan().tasks);expect(undoPlan(r,p).tasks).toEqual(p.tasks);expect(undoPlan(r,p).revision).toBe(3)})
+it('edited parallel bottleneck changes actual scenario consequences',()=>{
+ const p=confirm(freshPlan(),dependencyProposal(freshPlan(),'T1','',10))
+ const draft=delayProposal(p);expect(draft.cost).toContain('moves 0 working days');expect(schedule(draft.candidate.tasks).length).toBe(18)
+ const c=confirm(p,draft),scope=recoveryProposal(c,'scope');expect(schedule(scope.candidate.tasks).finishDate).toBe('2026-10-26');expect(scope.residual).toContain('4 working days after baseline')
+})
