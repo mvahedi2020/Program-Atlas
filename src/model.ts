@@ -26,7 +26,7 @@ export const seed: Task[] = [
  {id:'E2',duration:2,predecessors:['A2','E1'],handoffMode:'standard'},
 ]
 export interface Risk { kind: RiskKind; reason: string; cost: string; residual: string }
-export interface Decision { owner: string; needed: string; evidence: string; due: string; revision: number }
+export interface Decision { owner: string; needed: string; evidence: string; due: string; revision: number; commitments: import('./schedule').Schedule; riskSnapshot: Risk[] }
 export interface Plan { schema: 1; revision: number; tasks: Task[]; risks: Risk[]; decisions: Decision[] }
 export function freshPlan(): Plan { return {schema:1,revision:0,tasks:structuredClone(seed),risks:[],decisions:[]} }
 export const objective = 'Launch a community learning pilot with reliable routing, reproducible acceptance evidence, and a support-ready handoff.'
