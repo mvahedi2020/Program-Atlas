@@ -8,6 +8,10 @@ Mo owns product and program direction. AI assists implementation and verificatio
 
 [Product brief](docs/product/Product_Brief.md) · [PRD](docs/product/PRD.md) · [Sample contract](docs/product/Sample_Contract.md) · [Case study](docs/product/Case_Study.md) · [Decisions and risks](docs/product/Decisions_and_Risks.md) · [Validation](docs/product/Validation.md) · [Walkthrough](docs/product/Sample_Walkthrough.md)
 
+Product tradeoff: recovery can reduce delay while leaving an explicit cost and residual risk. The next investment depends on better escalation decisions, with calendar, resource and authority assumptions validated separately. See the [case study](docs/product/Case_Study.md) for the proposed comparison and investment criteria.
+
+Start with the partner delay: the original commitment is October 20, and the delay moves readiness to October 23. Compare scope reduction, resequencing, and contingency, each with a cost or risk; then review the confirmed escalation and executive brief. The [walkthrough](docs/product/Sample_Walkthrough.md) explains the scenario assumptions, and [Validation](docs/product/Validation.md) records software and release evidence. No human evaluation has been conducted.
+
 ## Run and verify
 
 Requires Node 24. No runtime credentials or external services are supported.
@@ -25,8 +29,6 @@ npm run preview
 ```
 
 Preview: `http://127.0.0.1:4187/Program-Atlas/`. Browser tests run against the production build and use the same strict port. No database or notifications exist. Confirmed actions stay in browser-local storage; compatible refresh restores them, invalid data is preserved until reviewed reset, and unavailable storage is explained as memory only. Preview/cancel/export are nonmutating. One-level Undo restores the last confirmed snapshot in this tab, until refresh/external update.
-
-Start with the partner delay: the original commitment is October 20, and the delay moves readiness to October 23. Compare scope reduction, resequencing, and contingency, each with a cost or risk; then review the confirmed escalation and executive brief. The [walkthrough](docs/product/Sample_Walkthrough.md) explains the scenario assumptions, and [Validation](docs/product/Validation.md) records software and release evidence. No human evaluation has been conducted.
 
 The repository includes a pinned verification/Pages workflow and `/Program-Atlas/` base. The build also rejects tracked runtime/environment files. Publication is accepted only after Actions/Pages success and artifact/live parity checks.
 
