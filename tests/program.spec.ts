@@ -56,3 +56,14 @@ test('production security metadata and all seven product evidence links are pres
 })
 test('320px viewport preserves default list and page-wide layout',async({page})=>{await page.setViewportSize({width:320,height:760});await page.goto('');await expect(page.getByRole('button',{name:'List',exact:true})).toHaveAttribute('aria-pressed','true');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.getByRole('button',{name:'Review escalation record'}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');expect(await stored(page)).toBeNull()})
 test('invalid escalation due point is explained and saves no schedule or record',async({page})=>{await page.goto('');await page.getByLabel('Due point / weekday').fill('2026-10-11');await page.getByRole('button',{name:'Review escalation record'}).click();await expect(page.getByRole('alert')).toContainText('weekday');expect(await stored(page)).toBeNull();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 20')})
+
+test('malformed risk type preserves saved bytes and requires a reviewed reset',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('');await delay(page);
+ const raw=await page.evaluate(k=>{const state=JSON.parse(localStorage.getItem(k)!);state.risks[0].kind=['delay'];const raw=JSON.stringify(state);localStorage.setItem(k,raw);return raw},key);
+ await page.reload();await expect(page.getByText('Saved data needs recovery')).toBeVisible();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 20');
+ expect(await stored(page)).toBe(raw);await expect(page.getByRole('button',{name:'Preview partner delay'})).toBeDisabled();
+ await page.getByRole('button',{name:'Reset sample',exact:true}).click();await page.getByRole('button',{name:'Cancel preview'}).click();expect(await stored(page)).toBe(raw);
+ await page.getByRole('button',{name:'Reset sample',exact:true}).click();await page.getByRole('button',{name:'Confirm reset'}).click();await expect(page.getByText('Browser-local save')).toBeVisible();
+ await delay(page);await page.getByRole('button',{name:'Preview scope reduction'}).click();await page.getByRole('button',{name:'Confirm proposal',exact:true}).click();await expect(page.getByTestId('readiness-date')).toHaveText('Oct 21');
+ expect(errors).toEqual([]);
+})

@@ -9,3 +9,16 @@ it('catches throwing storage getter and quota failure',()=>{const get=()=>{throw
 it('rejects same-revision cross-tab content changes before mutation',()=>{const p=freshPlan(),get=mock(JSON.stringify(p));const token=loadStorage(get).token;const altered=freshPlan();altered.tasks[2].duration=5;get().setItem('',JSON.stringify(altered));expect(()=>saveStorage(p,token,'saved',false,get)).toThrow(StorageConflict);expect(loadStorage(get).plan.tasks[2].duration).toBe(5)})
 it('rejects malformed duration, snapshots, unknown IDs, incompatible schema, and cycles',()=>{const p=freshPlan();expect(parsePlan('{"schema":2}')).toBeNull();p.tasks[0].duration=Infinity;expect(parsePlan(JSON.stringify(p))).toBeNull();p.tasks[0].duration=3;p.tasks[0].predecessors=['P2'];expect(parsePlan(JSON.stringify(p))).toBeNull();const c=confirm(freshPlan(),decisionProposal(freshPlan(),{owner:'Mira Vale',needed:'review option',evidence:'sample evidence',due:'2026-10-09'}));c.decisions[0].commitments.finishDate='2026-10-30';expect(parsePlan(JSON.stringify(c))).toBeNull()})
 it('rejects contradictory aggregate snapshots and duplicate critical members',()=>{const c=confirm(freshPlan(),decisionProposal(freshPlan(),{owner:'Mira Vale',needed:'review option',evidence:'sample evidence',due:'2026-10-09'}));c.decisions[0].commitments.length=15;c.decisions[0].commitments.finishDate='2026-10-23';expect(parsePlan(JSON.stringify(c))).toBeNull();c.decisions[0].commitments.length=12;c.decisions[0].commitments.finishDate='2026-10-20';c.decisions[0].commitments.critical.push('T1');expect(parsePlan(JSON.stringify(c))).toBeNull()})
+
+it.each(['risk', 'decision risk snapshot'])('rejects array risk kinds in %s while preserving the original bytes', location=>{
+ const delayed=confirm(freshPlan(),delayProposal(freshPlan()));
+ const plan=location==='risk'?delayed:confirm(delayed,decisionProposal(delayed,{owner:'Mira Vale',needed:'Review delayed handoff',evidence:'Fictional partner delay',due:'2026-10-09'}));
+ const data=JSON.parse(JSON.stringify(plan));
+ if(location==='risk')data.risks[0].kind=['delay'];else data.decisions[0].riskSnapshot[0].kind=['delay'];
+ const raw=JSON.stringify(data),get=mock(raw);
+ expect(parsePlan(raw)).toBeNull();expect(loadStorage(get).mode).toBe('invalid');
+ expect(()=>saveStorage(freshPlan(),raw,'invalid',false,get)).toThrow(/invalid/);expect(get().getItem()).toBe(raw);
+})
+it('requires an actual string handoff mode rather than a string-like array',()=>{
+ const plan=JSON.parse(JSON.stringify(freshPlan()));plan.tasks[0].handoffMode=['standard'];expect(parsePlan(JSON.stringify(plan))).toBeNull();
+})

@@ -9,7 +9,7 @@ const access:StorageAccess=()=>window.localStorage
 function record(value:unknown):value is Record<string,unknown> {return typeof value==='object' && value!==null && !Array.isArray(value)}
 function text(value:unknown):value is string {return typeof value==='string' && value.length>=1 && value.length<=1200}
 function integer(value:unknown,min=0,max=Number.MAX_SAFE_INTEGER):value is number {return typeof value==='number' && Number.isInteger(value) && value>=min && value<=max}
-function validRisk(value:unknown):value is Risk {return record(value) && ['delay','scope','resequence','contingency','dependency'].includes(String(value.kind)) && text(value.reason) && text(value.cost) && text(value.residual)}
+function validRisk(value:unknown):value is Risk {return record(value) && typeof value.kind==='string' && ['delay','scope','resequence','contingency','dependency'].includes(value.kind) && text(value.reason) && text(value.cost) && text(value.residual)}
 function validDecision(value:unknown,revision:number):value is Decision {
  if(!record(value) || !text(value.owner) || !text(value.needed) || !text(value.evidence) || typeof value.due!=='string' || !validWorkDate(value.due) || !integer(value.revision) || value.revision>revision || !Array.isArray(value.riskSnapshot) || !value.riskSnapshot.every(validRisk)) return false
  const snapshot=value.commitments
@@ -26,7 +26,7 @@ export function parsePlan(raw:string):Plan|null {
  try {
   const value:unknown=JSON.parse(raw)
   if(!record(value) || value.schema!==1 || !integer(value.revision) || !Array.isArray(value.tasks) || !Array.isArray(value.risks) || !Array.isArray(value.decisions) || value.risks.length>100 || value.decisions.length>20 || !value.risks.every(validRisk) || !value.decisions.every(d=>validDecision(d,value.revision as number))) return null
-  if(!value.tasks.every(t=>record(t) && typeof t.id==='string' && integer(t.duration,1,20) && Array.isArray(t.predecessors) && t.predecessors.every(p=>typeof p==='string') && ['standard','rehearsal'].includes(String(t.handoffMode)))) return null
+  if(!value.tasks.every(t=>record(t) && typeof t.id==='string' && integer(t.duration,1,20) && Array.isArray(t.predecessors) && t.predecessors.every(p=>typeof p==='string') && typeof t.handoffMode==='string' && ['standard','rehearsal'].includes(t.handoffMode))) return null
   const tasks=value.tasks as Task[]
   if(validateTasks(tasks)) return null
   if(tasks.some(t=>t.handoffMode==='rehearsal') && !value.risks.some(r=>r.kind==='resequence')) return null
