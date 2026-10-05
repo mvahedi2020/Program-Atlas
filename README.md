@@ -29,3 +29,5 @@ Preview: `http://127.0.0.1:4187/Program-Atlas/`. Browser tests run against the p
 Start with the partner delay: the original commitment is October 20, and the delay moves readiness to October 23. Compare scope reduction, resequencing, and contingency, each with a cost or risk; then review the confirmed escalation and executive brief. The [walkthrough](docs/product/Sample_Walkthrough.md) explains the scenario assumptions, and [Validation](docs/product/Validation.md) records software and release evidence. No human evaluation has been conducted.
 
 The repository includes a pinned verification/Pages workflow and `/Program-Atlas/` base. The build also rejects tracked runtime/environment files. Publication is accepted only after Actions/Pages success and artifact/live parity checks.
+
+Read the [product documents](https://mvahedi2020.github.io/Program-Atlas/docs/index.html) in the styled reading guide. Canonical Markdown remains in `docs/`.
