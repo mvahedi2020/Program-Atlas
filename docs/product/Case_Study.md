@@ -1,5 +1,9 @@
 # Program Atlas case study
 
+See how a partner’s delay affects a launch date. Compare ways to recover time, understand each cost or remaining risk, and record who needs to make the next decision.
+
+**The product choice:** Explain the effect of a delay before choosing which cost or change in scope to accept. [Try the sample](https://mvahedi2020.github.io/Program-Atlas/) · [Follow the walkthrough](Sample_Walkthrough.md).
+
 ## Product and program ownership
 
 Mo directed this prototype toward program management: cross-functional dependencies, commitment consequences and accountable escalation. The Northstar sample is original fictional data. AI assisted implementation, review and software verification. The work is not presented as manual-only development, employer research, a defense program tool or a customer outcome.

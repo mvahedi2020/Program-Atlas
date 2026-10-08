@@ -1,6 +1,8 @@
 # Program Atlas
 
-A fictional program decision lab: follow a partner delay through four workstreams, compare recovery choices, and record the decision that changes a commitment.
+See how a partner’s delay affects a launch date. Compare ways to recover time, understand each cost or remaining risk, and record who needs to make the next decision. All records in this demo are fictional.
+
+**Try it:** Change the partner delay, compare the recovery options, and review the resulting commitment. [Open the demo](https://mvahedi2020.github.io/Program-Atlas/) · [Follow the walkthrough](docs/product/Sample_Walkthrough.md).
 
 **Published bounded prototype, October 1, 2026. Local, independent and initial public deployment verification passed.** [Interactive demo](https://mvahedi2020.github.io/Program-Atlas/) · [Public source](https://github.com/mvahedi2020/Program-Atlas). This is a deterministic simulation, not a delivery prediction. It contains original fictional workstreams, people, costs and schedules. No messages are sent; no production system or real customer data is connected.
 
