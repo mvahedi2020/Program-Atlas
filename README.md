@@ -4,6 +4,8 @@ See how a partner’s delay affects a launch date. Compare ways to recover time,
 
 **Try it:** Change the partner delay, compare the recovery options, and review the resulting commitment. [Open the demo](https://mvahedi2020.github.io/Program-Atlas/) · [Follow the walkthrough](docs/product/Sample_Walkthrough.md).
 
+**Experience connection:** My program work at Raytheon included integrated plans, critical paths, dependencies and phased delivery. This example isolates how a changed dependency becomes an explicit scope, cost or timing decision. [Read the decision to challenge](docs/product/Case_Study.md#experience-and-decision).
+
 **Published bounded prototype, October 1, 2026. Local, independent and initial public deployment verification passed.** [Interactive demo](https://mvahedi2020.github.io/Program-Atlas/) · [Public source](https://github.com/mvahedi2020/Program-Atlas). This is a deterministic simulation, not a delivery prediction. It contains original fictional workstreams, people, costs and schedules. No messages are sent; no production system or real customer data is connected.
 
 Mo owns product and program direction. AI assists implementation and verification. No human research, customer outcomes or personal review by Mo is claimed.

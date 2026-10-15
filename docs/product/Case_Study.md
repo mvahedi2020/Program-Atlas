@@ -4,6 +4,12 @@ See how a partner’s delay affects a launch date. Compare ways to recover time,
 
 **The product choice:** Explain the effect of a delay before choosing which cost or change in scope to accept. [Try the sample](https://mvahedi2020.github.io/Program-Atlas/) · [Follow the walkthrough](Sample_Walkthrough.md).
 
+## Experience and decision
+
+My program work at Raytheon included integrated plans, critical paths, dependencies and phased delivery. This example isolates how a changed dependency becomes an explicit scope, cost or timing decision. This is a separate fictional portfolio exercise; its records, rules and results do not reproduce an employer system.
+
+**Decision to challenge:** Which recovery is worth its cost, and who must accept the remaining risk? A date that improves on screen does not establish partner capacity or authorize a changed commitment.
+
 ## Product and program ownership
 
 Mo directed this prototype toward program management: cross-functional dependencies, commitment consequences and accountable escalation. The Northstar sample is original fictional data. AI assisted implementation, review and software verification. The work is not presented as manual-only development, employer research, a defense program tool or a customer outcome.
